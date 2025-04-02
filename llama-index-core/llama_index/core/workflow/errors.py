@@ -7,7 +7,11 @@ class WorkflowTimeoutError(Exception):
 
 
 class WorkflowRuntimeError(Exception):
-    pass
+    def get_original_cause(self) -> Exception | None:
+        curr_exc = self.__cause__
+        while isinstance(curr_exc, WorkflowRuntimeError):
+            curr_exc = curr_exc.__cause__
+        return curr_exc
 
 
 class WorkflowDone(Exception):
